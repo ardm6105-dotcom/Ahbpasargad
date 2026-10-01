@@ -29,7 +29,7 @@ TEMPLATES = [  # name, GB, days
     ("10GB - 30 روز", 10, 30), ("30GB - 30 روز", 30, 30), ("50GB - 30 روز", 50, 30),
     ("100GB - 30 روز", 100, 30), ("200GB - 60 روز", 200, 60), ("نامحدود - 30 روز", 0, 30),
 ]
-FIRST_USER = os.getenv("FIRST_USER", "jinx_user1")
+FIRST_USER = os.getenv("FIRST_USER", "AHB_user1")
 FIRST_USER_GB = int(os.getenv("FIRST_USER_GB", "50"))
 FIRST_USER_DAYS = int(os.getenv("FIRST_USER_DAYS", "30"))
 
