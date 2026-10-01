@@ -1,4 +1,4 @@
-# PasarGuard all-in-one for Railway: panel + node (xray) + nginx on one port
+# AHB Panel: PasarGuard + Xray core + nginx in one Railway service (port 8080)
 FROM pasarguard/node:latest AS node
 
 FROM pasarguard/panel:latest
@@ -15,10 +15,11 @@ COPY nginx.conf.template /etc/nginx/nginx.conf.template
 COPY ws.inc /etc/nginx/ws.inc
 COPY entrypoint.sh /entrypoint.sh
 COPY bootstrap.py /code/bootstrap.py
-COPY make_template.py /code/make_template.py
-COPY sub.html /tmp/sub.html
-RUN python /code/make_template.py /tmp/sub.html /code/custom_templates/subscription/index.html
-RUN chmod +x /entrypoint.sh /opt/pg-node/main /usr/local/bin/xray
+COPY sub.html /code/custom_templates/subscription/index.html
+COPY healthcheck.sh /usr/local/bin/jinx-healthcheck
+# strip Windows line endings (safe if files were edited on a phone/PC), then make executable
+RUN sed -i "s/\r$//" /entrypoint.sh /usr/local/bin/jinx-healthcheck /code/bootstrap.py /etc/nginx/nginx.conf.template /etc/nginx/ws.inc \
+ && chmod +x /entrypoint.sh /opt/pg-node/main /usr/local/bin/xray /usr/local/bin/jinx-healthcheck
 
 ENV PORT=8080 \
     UVICORN_HOST=127.0.0.1 \
@@ -33,4 +34,5 @@ ENV PORT=8080 \
     XRAY_ASSETS_PATH=/usr/local/share/xray
 
 EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s CMD jinx-healthcheck || exit 1
 ENTRYPOINT ["/entrypoint.sh"]
