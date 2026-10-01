@@ -1,4 +1,4 @@
-"""Zero-touch setup for PasarGuard on Railway. Idempotent: safe on every boot."""
+"""AHB PANEL bootstrap: zero-touch setup for PasarGuard on Railway. Idempotent: safe on every boot."""
 import json, os, sys, time, urllib.error, urllib.parse, urllib.request
 
 BASE = "http://127.0.0.1:8000"
@@ -7,24 +7,29 @@ DOMAIN = (os.getenv("PUBLIC_DOMAIN") or os.getenv("RAILWAY_PUBLIC_DOMAIN") or ""
 import subprocess
 USER, PASS = "admin", "admin"          # fixed on purpose, re-applied on every boot
 RESELLER_USER, RESELLER_PASS, RESELLER_GB = "reseller", "reseller", 50
-CORE_NAME, NODE_NAME, GROUP_NAME = "Ahb-Core", "Ahb-Core", "Ahb-all"
-TITLE = os.getenv("CONFIG_TITLE", "ای اچ بی | AHB PANEL")
+CORE_NAME, NODE_NAME, GROUP_NAME = "AHB-Core", "AHB-Core", "AHB-all"
+TITLE = os.getenv("CONFIG_TITLE", "ای اچ بی")
 GB = 1024 ** 3
 DAY = 86400
 
-# 5 inbounds: VLESS + WS + TLS(443 on Railway edge), alpn http/1.1, fp chrome
+# 5 VLESS + WS + TLS configs (Railway edge terminates TLS on 443), alpn http/1.1.
+# Each one gets its own path, fingerprint and name so they don't look like copies.
+# ?ed=2560 = WebSocket early data: the first packet rides on the handshake -> one round trip
+# less on every new connection, which is exactly what the "ping" test in V2Box/v2rayNG measures.
 INBOUNDS = [
-    ("AHB-VLESS-WS-1", "vless", 10001, "ws", "/ws/7a5a21d9-60f9-4542-943e-7838b90169e1"),
-    ("AHB-VLESS-WS-2", "vless", 10002, "ws", "/ws/4868e537-9fd8-46e9-b63a-f36459d18a81"),
-    ("AHB-VLESS-WS-3", "vless", 10003, "ws", "/ws/b1dfa4cc-0ed6-4956-b330-8ccb51dc0828"),
-    ("AHB-VLESS-WS-4", "vless", 10004, "ws", "/ws/3d801b12-a333-452c-b9d5-90ece1a8d68c"),
-    ("AHB-VLESS-WS-5", "vless", 10005, "ws", "/ws/cc046fa3-78ec-4619-ac8f-9d6c7a5d0755"),
+    # tag              proto    port  net   server path                                   fp         name
+    ("AHB-VLESS-WS-1", "vless", 10001, "ws", "/ws/7a5a21d9-60f9-4542-943e-7838b90169e1",     "chrome",  "🚀 Turbo"),
+    ("AHB-VLESS-WS-2", "vless", 10002, "ws", "/stream/4868e537-9fd8-46e9-b63a-f36459d18a81", "firefox", "⚡ Flash"),
+    ("AHB-VLESS-WS-3", "vless", 10003, "ws", "/live/b1dfa4cc-0ed6-4956-b330-8ccb51dc0828",   "safari",  "🔥 Fire"),
+    ("AHB-VLESS-WS-4", "vless", 10004, "ws", "/gw/3d801b12-a333-452c-b9d5-90ece1a8d68c",    "edge",    "💎 Diamond"),
+    ("AHB-VLESS-WS-5", "vless", 10005, "ws", "/cdn/cc046fa3-78ec-4619-ac8f-9d6c7a5d0755",    "ios",     "🌙 Night"),
 ]
+EARLY_DATA = "?ed=2560"
 TEMPLATES = [  # name, GB, days
     ("10GB - 30 روز", 10, 30), ("30GB - 30 روز", 30, 30), ("50GB - 30 روز", 50, 30),
     ("100GB - 30 روز", 100, 30), ("200GB - 60 روز", 200, 60), ("نامحدود - 30 روز", 0, 30),
 ]
-FIRST_USER = os.getenv("FIRST_USER", "ahb_user1")
+FIRST_USER = os.getenv("FIRST_USER", "jinx_user1")
 FIRST_USER_GB = int(os.getenv("FIRST_USER_GB", "50"))
 FIRST_USER_DAYS = int(os.getenv("FIRST_USER_DAYS", "30"))
 
@@ -148,12 +153,12 @@ def inbound(tag, proto, port, net, path):
     if proto == "vless": settings["decryption"] = "none"
     return {"tag": tag, "listen": "127.0.0.1", "port": port, "protocol": proto,
             "settings": settings, "streamSettings": stream,
-            "sniffing": {"enabled": True, "destOverride": ["http", "tls", "quic"]}}
+            "sniffing": {"enabled": True, "destOverride": ["http", "tls", "quic"], "routeOnly": True}}
 
 CORE_CONFIG = {
     "log": {"loglevel": "warning"},
     "dns": {"servers": ["https+local://1.1.1.1/dns-query", "8.8.8.8", "localhost"]},
-    "inbounds": [inbound(*i) for i in INBOUNDS],
+    "inbounds": [inbound(*i[:5]) for i in INBOUNDS],
     "outbounds": [
         {"protocol": "freedom", "tag": "DIRECT", "settings": {"domainStrategy": "UseIPv4"}},
         {"protocol": "blackhole", "tag": "BLOCK"},
@@ -168,7 +173,7 @@ CORE_CONFIG = {
 def ensure_core():
     cores = as_list(must("GET", "/api/cores"), "cores")
     for c in cores:
-        if c.get("name") in (CORE_NAME, "ahb-core"):
+        if c.get("name") in (CORE_NAME, "AHB-core"):
             body = {"name": CORE_NAME, "config": CORE_CONFIG, "exclude_inbound_tags": [], "fallbacks_inbound_tags": []}
             code, res = req("PUT", f"/api/core/{c['id']}?restart_nodes=true", body)
             if code not in (200, 201):  # node may still be starting: save config without restart
@@ -186,7 +191,7 @@ def ensure_node(core_id):
             "connection_type": "grpc", "server_ca": cert, "keep_alive": 60,
             "core_config_id": core_id, "api_key": api_key}
     for n in as_list(must("GET", "/api/nodes"), "nodes"):
-        if n.get("name") in (NODE_NAME, "ahb-local"):
+        if n.get("name") in (NODE_NAME, "AHB-local"):
             must("PUT", f"/api/node/{n['id']}", body); log("node updated"); return
     must("POST", "/api/node", body); log("node created")
 
@@ -204,16 +209,13 @@ def ensure_hosts():
         log("WARNING: no public domain yet (Settings > Networking > Generate Domain), hosts skipped"); return
     existing = as_list(must("GET", "/api/hosts"), "hosts")
     wanted = {i[0] for i in INBOUNDS}
-    for h in existing:  # clean hosts left from older ahb versions
+    for h in existing:  # clean hosts left from older AHB versions
         if str(h.get("inbound_tag") or "").startswith("AHB-") and h.get("inbound_tag") not in wanted:
             req("DELETE", f"/api/host/{h['id']}")
-    for idx, (tag, proto, port, net, path) in enumerate(INBOUNDS):
-        body = {"remark": f"{TITLE} {idx + 1}", "allowinsecure": False, "address": [DOMAIN], "inbound_tag": tag, "port": 443,
-                "sni": [DOMAIN], "host": [DOMAIN], "path": path, "security": "tls",
-                "alpn": ["http/1.1"], "fingerprint": "chrome", "priority": idx + 1,
-                "is_disabled": False}
-        if net == "xhttp":
-            body["transport_settings"] = {"xhttp_settings": {"mode": "packet-up"}}
+    for idx, (tag, proto, port, net, path, fp, name) in enumerate(INBOUNDS):
+        body = {"remark": f"{name} | {TITLE}", "allowinsecure": False, "address": [DOMAIN], "inbound_tag": tag,
+                "port": 443, "sni": [DOMAIN], "host": [DOMAIN], "path": path + EARLY_DATA, "security": "tls",
+                "alpn": ["http/1.1"], "fingerprint": fp, "priority": idx + 1, "is_disabled": False}
         mine = [h for h in existing if h.get("inbound_tag") == tag]
         if mine:
             must("PUT", f"/api/host/{mine[0]['id']}", {**body, "id": mine[0]["id"]})
@@ -262,6 +264,7 @@ def ensure_reseller_role(group_id):
         code, res = req("POST", base, role)
         if code in (200, 201): log("reseller role created"); return
         log(f"reseller role failed {code}: {res}"); return
+    log("reseller role endpoint not found, skipped")
 
 def role_id_by_name(name):
     code, res = req("GET", "/api/admin-roles")
@@ -282,7 +285,6 @@ def ensure_demo_reseller():
         write_password("user", RESELLER_USER, RESELLER_PASS); log("demo reseller ready:", RESELLER_USER)
     elif code != 409:
         log(f"demo reseller failed {code}: {res}")
-    log("reseller role endpoint not found, skipped")
 
 def ensure_templates(group_id):
     have = {t.get("name") for t in as_list(must("GET", "/api/user_templates"), "templates")}
@@ -301,6 +303,24 @@ def ensure_first_user(group_id):
                                    "expire": int(time.time()) + FIRST_USER_DAYS * DAY,
                                    "data_limit_reset_strategy": "no_reset", "note": "auto-created"})
     log("first user:", FIRST_USER, "sub:", u.get("subscription_url"))
+
+def attach_orphans(group_id):
+    """Users created in the panel without a group get all 5 configs automatically."""
+    code, res = req("GET", "/api/users?no_group=true&limit=200")
+    if code == 401:
+        login(); code, res = req("GET", "/api/users?no_group=true&limit=200")
+    if code != 200: return
+    for u in as_list(res, "users"):
+        if u.get("group_ids"): continue
+        c, r = req("PUT", f"/api/user/{u['username']}", {"group_ids": [group_id]})
+        log(f"auto-attached 5 configs to {u['username']}" if c == 200 else f"attach {u['username']} failed {c}: {r}")
+
+def watch(group_id):
+    log("watcher on: new users get the 5 configs automatically")
+    while True:
+        try: attach_orphans(group_id)
+        except Exception as e: log("watcher error:", e)
+        time.sleep(15)
 
 def step(name, fn, *a):
     try: return fn(*a)
@@ -324,6 +344,7 @@ def main():
     step("demo reseller", ensure_demo_reseller)
     step("first user", ensure_first_user, gid)
     log("DONE ->", f"https://{DOMAIN}/dashboard/" if DOMAIN else "generate a Railway domain")
+    watch(gid)
 
 if __name__ == "__main__":
     try: main()
