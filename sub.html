@@ -1,372 +1,222 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#08111f">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f8ff">
 <title>Subscription</title>
 <style>
 :root{
-  --bg:#07101d;
-  --card:#0d1a2b;
-  --card2:#10223a;
-  --text:#f5f8ff;
-  --muted:#91a3ba;
-  --line:rgba(255,255,255,.08);
-  --blue:#2f7cff;
-  --cyan:#20c8ff;
-  --green:#20d89b;
-  --purple:#8c65ff;
-  --red:#ff5c72;
-  --shadow:0 22px 70px rgba(0,0,0,.35);
+ --bg:#f4f7fc;--surface:#fff;--surface2:#f7faff;--text:#15243a;--muted:#7890aa;
+ --line:#e4ebf4;--blue:#1769ff;--blue2:#55a0ff;--green:#16c98b;--purple:#7957f7;
+ --danger:#f05268;--shadow:0 12px 35px rgba(31,64,105,.09);--radius:20px;
 }
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:Tahoma,"Segoe UI",sans-serif;background:
-radial-gradient(circle at 85% 0%,rgba(47,124,255,.18),transparent 32%),
-radial-gradient(circle at 10% 35%,rgba(32,200,255,.08),transparent 28%),var(--bg);color:var(--text)}
-body{padding:22px}
-button,input{font:inherit}
-button{border:0;cursor:pointer}
-.app{width:min(1080px,100%);margin:auto}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:20px}
-.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
-background:linear-gradient(145deg,var(--blue),#174dc2);box-shadow:0 10px 30px rgba(47,124,255,.28)}
-.logo svg{width:23px}
-.user-mini{color:var(--muted);font-size:13px}
-.hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08);
-border-radius:28px;padding:28px;background:linear-gradient(135deg,#102b59,#0b1729 65%);
-box-shadow:var(--shadow);margin-bottom:16px}
-.hero:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;
-left:-80px;top:-150px;background:rgba(32,200,255,.13);filter:blur(4px)}
-.hero-content{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.hero h1{font-size:25px;margin:0 0 9px}
-.hero p{margin:0;color:#a9bad0;font-size:13px}
-.status{display:inline-flex;align-items:center;gap:7px;margin-top:15px;padding:8px 12px;border-radius:999px;
-background:rgba(32,216,155,.12);color:#56e8b8;font-size:12px;font-weight:700}
-.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 12px var(--green)}
-.shield{width:78px;height:78px;border-radius:24px;display:grid;place-items:center;
-background:rgba(47,124,255,.14);border:1px solid rgba(80,150,255,.22)}
-.shield svg{width:42px;fill:none;stroke:#65a0ff;stroke-width:1.6}
-
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
-.card{background:linear-gradient(145deg,rgba(16,34,58,.96),rgba(10,23,39,.96));
-border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 12px 35px rgba(0,0,0,.16)}
-.stat{min-height:122px}
-.icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;margin-bottom:13px;background:rgba(47,124,255,.12);color:#5da0ff}
-.icon.green{background:rgba(32,216,155,.11);color:#39e2ad}
-.icon.purple{background:rgba(140,101,255,.12);color:#a48aff}
-.icon.cyan{background:rgba(32,200,255,.11);color:#4dd8ff}
-.icon.red{background:rgba(255,92,114,.11);color:#ff7185}
-.icon svg{width:19px;height:19px}
-.label{font-size:11px;color:var(--muted);margin-bottom:7px}
-.value{font-size:19px;font-weight:900}
-.unit{font-size:11px;color:var(--muted);font-weight:400;margin-right:3px}
-
-.usage{margin-bottom:16px}
-.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.title{font-size:14px;font-weight:800}
-.small{font-size:11px;color:var(--muted)}
-.progress{height:12px;border-radius:20px;background:#16283e;overflow:hidden;margin:15px 0 8px}
-.progress>span{display:block;height:100%;width:35.6%;border-radius:inherit;background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 20px rgba(32,200,255,.35);transition:width .5s}
-.progress-foot{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
-.progress-foot strong{color:#eaf3ff}
-
-.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.info{display:flex;align-items:center;gap:13px}
-.info .icon{margin:0;flex:none}
-.info b{font-size:14px;display:block;margin-top:5px}
-
-.configs{margin-bottom:16px}
-.config-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
-.config-head h2{font-size:16px;margin:0}
-.count{font-size:11px;color:#8db9ff;background:rgba(47,124,255,.1);padding:7px 10px;border-radius:9px}
-.table{overflow:hidden;border:1px solid var(--line);border-radius:15px}
-.config{display:grid;grid-template-columns:1.5fr .8fr .9fr .7fr auto;align-items:center;gap:10px;padding:14px 13px;border-bottom:1px solid var(--line);font-size:11px}
-.config:last-child{border-bottom:0}
-.config-head-row{background:rgba(255,255,255,.025);color:var(--muted);font-size:10px}
-.name{font-weight:800}
-.type{color:#8ebcff}
-.traffic{color:#d9e5f5}
-.badge{justify-self:start;padding:5px 8px;border-radius:999px;font-size:9px;background:rgba(32,216,155,.11);color:#42dfac}
-.badge.off{background:rgba(255,92,114,.11);color:#ff7185}
-.actions{display:flex;gap:6px}
-.action{width:31px;height:31px;border-radius:9px;background:#16283e;color:#a9c7ed;display:grid;place-items:center}
-.action:hover{background:#203a59;color:white}
-
-.subbox{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
-.link{direction:ltr;text-align:left;width:100%;height:46px;border-radius:13px;border:1px solid var(--line);
-background:#081423;color:#91a9c5;padding:0 14px;font-size:11px;outline:0}
-.copy{height:46px;padding:0 18px;border-radius:13px;color:white;font-weight:800;
-background:linear-gradient(135deg,var(--blue),#245bd4);box-shadow:0 10px 25px rgba(47,124,255,.2)}
-.copy:active{transform:scale(.98)}
-.note{margin-top:10px;color:var(--muted);font-size:10px}
-
-.footer{text-align:center;color:#566a82;font-size:10px;padding:10px 0 4px}
-
-.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;
-background:#12253c;border:1px solid var(--line);color:#fff;padding:11px 17px;border-radius:12px;font-size:12px;
-transition:.25s;box-shadow:var(--shadow)}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-
-@media(max-width:850px){
-  body{padding:12px}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .stats .stat:last-child{grid-column:span 2}
-  .hero{padding:22px}
-  .info-grid{grid-template-columns:1fr}
-}
-@media(max-width:620px){
-  .hero-content{align-items:flex-start}
-  .shield{width:58px;height:58px;border-radius:18px}
-  .shield svg{width:32px}
-  .hero h1{font-size:20px}
-  .user-mini{display:none}
-  .stats{grid-template-columns:repeat(2,1fr);gap:8px}
-  .stats .stat:last-child{grid-column:span 2}
-  .card{padding:14px;border-radius:16px}
-  .stat{min-height:108px}
-  .value{font-size:16px}
-  .config-head-row{display:none}
-  .config{grid-template-columns:1fr auto;gap:8px}
-  .config>*:nth-child(2),.config>*:nth-child(3){display:block}
-  .config .badge{grid-column:2;grid-row:1}
-  .config .actions{grid-column:1 / -1}
-  .subbox{grid-template-columns:1fr}
-  .copy{width:100%}
-}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,"Segoe UI",sans-serif}
+button,input{font:inherit}.wrap{max-width:1120px;margin:auto;padding:18px}
+.top{height:58px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:19px}.brandmark{width:40px;height:40px;border-radius:13px;
+display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#1680ff,#174bd2);box-shadow:0 7px 18px #1769ff38}
+.top-actions{display:flex;align-items:center;gap:8px}.user{font-size:12px;color:var(--muted)}
+.iconbtn{width:39px;height:39px;border:1px solid var(--line);background:var(--surface);border-radius:12px;color:var(--muted);cursor:pointer}
+.hero{position:relative;overflow:hidden;border-radius:23px;padding:26px 28px;margin:9px 0 15px;
+background:linear-gradient(110deg,#09265b,#1749b5 54%,#15398b);color:#fff;box-shadow:0 18px 45px #1b55c52b}
+.hero:after{content:"";position:absolute;width:330px;height:330px;border-radius:50%;left:-120px;top:-180px;background:#38a1ff2b}
+.hero-in{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center}
+.hero h1{font-size:24px;margin:0 0 8px}.hero p{font-size:12px;color:#d3e3ff;margin:0}
+.active{display:inline-flex;gap:7px;align-items:center;background:#18d59b20;color:#65f0c3;padding:7px 11px;border-radius:99px;margin-top:13px;font-size:11px;font-weight:800}
+.active i{width:7px;height:7px;background:#20d79c;border-radius:50%}
+.shield{width:78px;height:78px;border-radius:23px;background:#ffffff14;border:1px solid #ffffff25;display:grid;place-items:center}
+.shield svg{width:45px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.stat{padding:16px;min-height:119px}.ico{width:37px;height:37px;border-radius:11px;display:grid;place-items:center;margin-bottom:12px;
+background:#1769ff12;color:var(--blue);font-weight:900}.ico.g{color:var(--green);background:#16c98b12}.ico.p{color:var(--purple);background:#7957f712}
+.label{font-size:10px;color:var(--muted);margin-bottom:7px}.value{font-size:18px;font-weight:900}.unit{font-size:10px;color:var(--muted);font-weight:400}
+.usage{padding:17px;margin-top:13px}.between{display:flex;justify-content:space-between;align-items:center;gap:10px}.title{font-size:13px;font-weight:900}
+.progress{height:11px;border-radius:99px;background:#eaf0f7;overflow:hidden;margin:13px 0 8px}.bar{height:100%;width:0;background:linear-gradient(90deg,#1a6cff,#23c8e9);border-radius:99px;transition:width .5s}
+.small{font-size:10px;color:var(--muted)}.small strong{color:var(--blue)}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:13px}.infocard{padding:15px;display:flex;gap:11px;align-items:center}
+.infocard .ico{margin:0;flex:none}.infocard b{font-size:13px;display:block;margin-top:5px}
+.configbox{padding:17px;margin-top:13px}.configtitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.pill{background:#1769ff10;color:var(--blue);padding:7px 10px;border-radius:9px;font-size:10px}
+.table{border:1px solid var(--line);border-radius:14px;overflow:hidden}.row{display:grid;grid-template-columns:1.6fr .9fr 1.1fr .7fr 90px;
+align-items:center;gap:10px;padding:12px 11px;border-bottom:1px solid var(--line);font-size:10px}.row:last-child{border:0}
+.th{background:var(--surface2);color:var(--muted);font-size:9px}.name{font-weight:800}.type{color:#5276a2}.traffic{color:#405975}.badge{justify-self:start;padding:5px 8px;border-radius:99px;background:#16c98b12;color:#0eae78;font-size:9px}
+.badge.off{background:#f0526812;color:#e23e57}.actions{display:flex;gap:5px}.mini{border:0;background:#f0f5fb;color:#6380a1;width:28px;height:28px;border-radius:8px;cursor:pointer}
+.sub{padding:17px;margin-top:13px}.subline{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:12px}.link{direction:ltr;width:100%;height:45px;border:1px solid var(--line);border-radius:12px;background:#f8fbff;padding:0 12px;color:#6f86a1;font-size:10px;outline:none}.copy{height:45px;border:0;border-radius:12px;padding:0 18px;background:linear-gradient(135deg,#1a70ff,#2857db);color:#fff;font-weight:800;cursor:pointer}
+.footer{text-align:center;font-size:9px;color:#a1b1c3;padding:13px}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;background:#14263d;color:#fff;padding:10px 14px;border-radius:11px;font-size:11px;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+.dark{--bg:#07111e;--surface:#0e1b2b;--surface2:#112238;--text:#eef6ff;--muted:#91a6bc;--line:#ffffff12;--shadow:0 14px 40px #0005}
+.dark .progress{background:#17283d}.dark .link{background:#091625}.dark .mini{background:#16283d}
+@media(max-width:850px){.grid5{grid-template-columns:repeat(2,1fr)}.grid5 .stat:last-child{grid-column:1/-1}.row{grid-template-columns:1.4fr .8fr 1fr .7fr 72px}}
+@media(max-width:600px){.wrap{padding:10px}.hero{padding:20px}.hero h1{font-size:19px}.shield{width:58px;height:58px}.shield svg{width:34px}
+.grid5{gap:8px}.stat{padding:13px;min-height:105px}.value{font-size:16px}.info{grid-template-columns:1fr}.table{border-radius:12px}.th{display:none}.row{grid-template-columns:1fr auto;gap:6px;padding:12px}.row>*:nth-child(2),.row>*:nth-child(3){display:block}.row .badge{grid-column:2;grid-row:1}.row .actions{grid-column:1/-1}.subline{grid-template-columns:1fr}.copy{width:100%}}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="wrap">
+<header class="top">
+ <div class="brand"><span class="brandmark">◆</span><span id="service">Subscription</span></div>
+ <div class="top-actions"><span class="user" id="topUser">اشتراک شخصی</span><button class="iconbtn" id="theme" title="تغییر تم">☾</button></div>
+</header>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
-          <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/>
-          <path d="M9 12l2 2 4-5"/>
-        </svg>
-      </div>
-      <span id="serviceName">AHB Subscription</span>
-    </div>
-    <div class="user-mini">اشتراک شخصی شما</div>
-  </header>
+<section class="hero"><div class="hero-in"><div>
+ <h1 id="hello">سلام، کاربر عزیز 👋</h1><p id="welcome">اطلاعات اشتراک شما</p>
+ <div class="active"><i></i><span id="state">فعال</span></div>
+</div><div class="shield"><svg viewBox="0 0 48 48" fill="none" stroke="#79b1ff" stroke-width="1.7"><path d="M24 4l15 6v11c0 9.5-6.3 17.7-15 22-8.7-4.3-15-12.5-15-22V10l15-6z"/><path d="M16 24l5 5 11-12"/></svg></div></div></section>
 
-  <section class="hero">
-    <div class="hero-content">
-      <div>
-        <h1 id="greeting">سلام، کاربر عزیز 👋</h1>
-        <p id="welcome">خوش آمدید؛ اطلاعات اشتراک شما در این صفحه قرار دارد.</p>
-        <div class="status"><span class="dot"></span><span id="statusText">اشتراک فعال</span></div>
-      </div>
-      <div class="shield">
-        <svg viewBox="0 0 48 48">
-          <path d="M24 4l15 6v11c0 9.5-6.3 17.7-15 22-8.7-4.3-15-12.5-15-22V10l15-6z"/>
-          <path d="M16 24l5 5 11-12"/>
-        </svg>
-      </div>
-    </div>
-  </section>
+<section class="grid5">
+ <div class="card stat"><div class="ico">◉</div><div class="label">حجم کل</div><div class="value"><span id="total">0</span> <span class="unit">GB</span></div></div>
+ <div class="card stat"><div class="ico p">↗</div><div class="label">مصرف شده</div><div class="value"><span id="used">0</span> <span class="unit">GB</span></div></div>
+ <div class="card stat"><div class="ico g">✓</div><div class="label">باقی مانده</div><div class="value"><span id="remain">0</span> <span class="unit">GB</span></div></div>
+ <div class="card stat"><div class="ico">▦</div><div class="label">کل کانفیگ‌ها</div><div class="value"><span id="count">0</span> <span class="unit">عدد</span></div></div>
+ <div class="card stat"><div class="ico g">●</div><div class="label">کانفیگ فعال</div><div class="value"><span id="activeCount">0</span> <span class="unit">عدد</span></div></div>
+</section>
 
-  <section class="stats">
-    <div class="card stat">
-      <div class="icon cyan">⌁</div>
-      <div class="label">حجم کل</div>
-      <div class="value"><span id="totalVolume">100</span> <span class="unit">GB</span></div>
-    </div>
-    <div class="card stat">
-      <div class="icon purple">↗</div>
-      <div class="label">مصرف شده</div>
-      <div class="value"><span id="usedVolume">35.6</span> <span class="unit">GB</span></div>
-    </div>
-    <div class="card stat">
-      <div class="icon green">✓</div>
-      <div class="label">باقی مانده</div>
-      <div class="value"><span id="remainingVolume">64.4</span> <span class="unit">GB</span></div>
-    </div>
-    <div class="card stat">
-      <div class="icon">▦</div>
-      <div class="label">کل کانفیگ‌ها</div>
-      <div class="value"><span id="configCount">8</span> <span class="unit">عدد</span></div>
-    </div>
-    <div class="card stat">
-      <div class="icon green">●</div>
-      <div class="label">کانفیگ فعال</div>
-      <div class="value"><span id="activeCount">6</span> <span class="unit">عدد</span></div>
-    </div>
-  </section>
+<section class="card usage">
+ <div class="between"><span class="title">مصرف حجم</span><span class="small"><strong id="used2">0 GB</strong> از <strong id="total2">0 GB</strong></span></div>
+ <div class="progress"><div class="bar" id="bar"></div></div>
+ <div class="between small"><span id="percent">0%</span><b id="remain2">0 GB باقی مانده</b></div>
+</section>
 
-  <section class="card usage">
-    <div class="row">
-      <span class="title">مصرف حجم</span>
-      <span class="small"><strong id="usedLabel">35.6 GB</strong> از <strong id="totalLabel">100 GB</strong></span>
-    </div>
-    <div class="progress"><span id="progressBar"></span></div>
-    <div class="progress-foot">
-      <span id="percentLabel">35.6%</span>
-      <strong id="remainingLabel">64.4 GB باقی مانده</strong>
-    </div>
-  </section>
+<section class="info">
+ <div class="card infocard"><div class="ico">▣</div><div><div class="label">تاریخ انقضا</div><b id="expire">—</b></div></div>
+ <div class="card infocard"><div class="ico p">◷</div><div><div class="label">مدت اشتراک</div><b id="duration">—</b></div></div>
+ <div class="card infocard"><div class="ico g">✓</div><div><div class="label">زمان باقی مانده</div><b id="days">—</b></div></div>
+</section>
 
-  <section class="info-grid">
-    <div class="card info">
-      <div class="icon">▣</div>
-      <div><div class="label">تاریخ انقضا</div><b id="expireDate">1405/07/25</b></div>
-    </div>
-    <div class="card info">
-      <div class="icon purple">◷</div>
-      <div><div class="label">مدت اشتراک</div><b id="duration">30 روز</b></div>
-    </div>
-    <div class="card info">
-      <div class="icon green">✓</div>
-      <div><div class="label">زمان باقی مانده</div><b id="daysLeft">12 روز</b></div>
-    </div>
-  </section>
+<section class="card configbox">
+ <div class="configtitle"><span class="title">لیست کانفیگ‌های شما</span><span class="pill" id="pill">0 کانفیگ</span></div>
+ <div class="table"><div class="row th"><span>نام کانفیگ</span><span>نوع</span><span>مصرف</span><span>وضعیت</span><span>عملیات</span></div><div id="list"></div></div>
+</section>
 
-  <section class="card configs">
-    <div class="config-head">
-      <h2>لیست کانفیگ‌های شما</h2>
-      <span class="count" id="configCounter">8 کانفیگ</span>
-    </div>
-
-    <div class="table">
-      <div class="config config-head-row">
-        <span>نام کانفیگ</span><span>نوع</span><span>مصرف</span><span>وضعیت</span><span>عملیات</span>
-      </div>
-      <div id="configList"></div>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="title" style="margin-bottom:12px">لینک اشتراک</div>
-    <div class="subbox">
-      <input class="link" id="subLink" readonly value="https://example.com/sub/AHB123456">
-      <button class="copy" id="copyBtn">کپی لینک</button>
-    </div>
-    <div class="note">این لینک را می‌توانید داخل برنامه‌های سازگار با Subscription وارد کنید.</div>
-  </section>
-
-  <div class="footer">Subscription • Personal Access</div>
-</div>
-
-<div class="toast" id="toast">لینک کپی شد ✓</div>
+<section class="card sub"><div class="title">لینک اشتراک</div><div class="subline"><input class="link" id="link" readonly><button class="copy" id="copy">کپی لینک</button></div></section>
+<div class="footer">Personal Subscription</div>
+</div><div class="toast" id="toast"></div>
 
 <script>
 /*
-  ================================
-  اطلاعات اشتراک را از این قسمت تغییر دهید
-  ================================
+DATA SOURCES
+1) ?api=https://your-domain/data.json
+   JSON can contain:
+   {userName,totalGB,usedGB,expireAt,duration,subscriptionLink,configs:[{name,type,usedGB,totalGB,active}]}
+
+2) ?data=BASE64(JSON)
+3) window.SUB_DATA = {...}
+4) built-in demo data
+
+For a real panel, point ?api= to an endpoint on your panel that returns JSON.
 */
-const SUBSCRIPTION = {
-  serviceName: "AHB Subscription",
-  userName: "کاربر عزیز",
-  welcome: "خوش آمدید؛ اطلاعات اشتراک شما در این صفحه قرار دارد.",
-  status: "اشتراک فعال",
-
-  totalGB: 100,
-  usedGB: 35.6,
-
-  configCount: 8,
-  activeCount: 6,
-
-  expireDate: "1405/07/25",
-  duration: "30 روز",
-  daysLeft: "12 روز",
-
-  link: "https://example.com/sub/AHB123456",
-
-  configs: [
-    {name:"Config-01", type:"VLESS", traffic:"5.2 GB / 10 GB", active:true},
-    {name:"Config-02", type:"Trojan", traffic:"3.1 GB / 10 GB", active:true},
-    {name:"Config-03", type:"VLESS", traffic:"7.8 GB / 10 GB", active:true},
-    {name:"Config-04", type:"Shadowsocks", traffic:"1.2 GB / 10 GB", active:true},
-    {name:"Config-05", type:"VLESS", traffic:"0.5 GB / 10 GB", active:false},
-    {name:"Config-06", type:"Trojan", traffic:"2.0 GB / 10 GB", active:true},
-    {name:"Config-07", type:"VLESS", traffic:"8.4 GB / 10 GB", active:true},
-    {name:"Config-08", type:"Trojan", traffic:"1.4 GB / 10 GB", active:false}
-  ]
+window.SUB_DATA = window.SUB_DATA || {
+ userName:"کاربر عزیز", welcome:"خوش آمدید؛ اطلاعات اشتراک شما در این صفحه قرار دارد.",
+ serviceName:"AHB Subscription", status:"فعال",
+ totalGB:100, usedGB:35.6, expireAt:"2026-10-14T23:59:59+03:30", duration:"30 روز",
+ subscriptionLink:"https://example.com/sub/AHB123456",
+ configs:[
+  {name:"Config-01",type:"VLESS",usedGB:5.2,totalGB:10,active:true},
+  {name:"Config-02",type:"Trojan",usedGB:3.1,totalGB:10,active:true},
+  {name:"Config-03",type:"VLESS",usedGB:7.8,totalGB:10,active:true},
+  {name:"Config-04",type:"Shadowsocks",usedGB:1.2,totalGB:10,active:true},
+  {name:"Config-05",type:"VLESS",usedGB:.5,totalGB:10,active:false},
+  {name:"Config-06",type:"Trojan",usedGB:2,totalGB:10,active:true},
+  {name:"Config-07",type:"VLESS",usedGB:8.4,totalGB:10,active:true},
+  {name:"Config-08",type:"Trojan",usedGB:1.4,totalGB:10,active:false}
+ ]
 };
 
-const $ = id => document.getElementById(id);
-const used = Number(SUBSCRIPTION.usedGB) || 0;
-const total = Number(SUBSCRIPTION.totalGB) || 1;
-const remaining = Math.max(total - used, 0);
-const percent = Math.min((used / total) * 100, 100);
+const qs=new URLSearchParams(location.search);
+const esc=s=>String(s??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[x]));
+const n=(v,d=0)=>Number.isFinite(Number(v))?Number(v):d;
+const fmt=v=>Number(v).toFixed(1).replace(/\.0$/,"");
+const aliases=(o,...keys)=>{for(const k of keys)if(o?.[k]!==undefined&&o[k]!==null)return o[k];return undefined};
 
-$("serviceName").textContent = SUBSCRIPTION.serviceName;
-$("greeting").textContent = `سلام، ${SUBSCRIPTION.userName} 👋`;
-$("welcome").textContent = SUBSCRIPTION.welcome;
-$("statusText").textContent = SUBSCRIPTION.status;
+function normalize(raw){
+ const x=raw||{};
+ const configs=Array.isArray(x.configs)?x.configs:(Array.isArray(x.inbounds)?x.inbounds:[]);
+ let total=aliases(x,"totalGB","total_gb","total","dataLimitGB","data_limit_gb");
+ let used=aliases(x,"usedGB","used_gb","used","downloadGB","download_gb");
+ total=n(total,0);used=n(used,0);
+ if(!total && x.dataLimit) total=n(x.dataLimit)/1073741824;
+ if(!used && x.up!==undefined) used=(n(x.up)+n(x.down))/1073741824;
+ return {
+  userName:aliases(x,"userName","username","name")||"کاربر عزیز",
+  welcome:x.welcome||"خوش آمدید؛ اطلاعات اشتراک شما در این صفحه قرار دارد.",
+  serviceName:x.serviceName||"Subscription",status:x.status||"فعال",
+  totalGB:total,usedGB:used,
+  expireAt:aliases(x,"expireAt","expire_at","expiresAt","expire","expiry"),
+  duration:x.duration||"—",
+  subscriptionLink:aliases(x,"subscriptionLink","subscription","sub","link")||"",
+  configs:configs.map((c,i)=>({
+    name:aliases(c,"name","remark","email")||`Config-${String(i+1).padStart(2,"0")}`,
+    type:aliases(c,"type","protocol")||"VLESS",
+    usedGB:n(aliases(c,"usedGB","used_gb","used"),0),
+    totalGB:n(aliases(c,"totalGB","total_gb","limitGB","limit"),0),
+    active: c.active!==false && c.enabled!==false
+  }))
+ };
+}
 
-$("totalVolume").textContent = total;
-$("usedVolume").textContent = used;
-$("remainingVolume").textContent = remaining.toFixed(1).replace(/\.0$/,"");
-$("configCount").textContent = SUBSCRIPTION.configCount;
-$("activeCount").textContent = SUBSCRIPTION.activeCount;
-
-$("usedLabel").textContent = `${used} GB`;
-$("totalLabel").textContent = `${total} GB`;
-$("remainingLabel").textContent = `${remaining.toFixed(1).replace(/\.0$/,"")} GB باقی مانده`;
-$("percentLabel").textContent = `${percent.toFixed(1).replace(/\.0$/,"")}%`;
-$("progressBar").style.width = percent + "%";
-
-$("expireDate").textContent = SUBSCRIPTION.expireDate;
-$("duration").textContent = SUBSCRIPTION.duration;
-$("daysLeft").textContent = SUBSCRIPTION.daysLeft;
-$("subLink").value = SUBSCRIPTION.link;
-
-const list = $("configList");
-list.innerHTML = SUBSCRIPTION.configs.map((c, i) => `
-  <div class="config">
-    <span class="name">${escapeHTML(c.name)}</span>
-    <span class="type">${escapeHTML(c.type)}</span>
-    <span class="traffic">${escapeHTML(c.traffic)}</span>
-    <span class="badge ${c.active ? "" : "off"}">${c.active ? "● فعال" : "● غیرفعال"}</span>
-    <span class="actions">
-      <button class="action" title="کپی کانفیگ" onclick="copyConfig(${i})">⧉</button>
-      <button class="action" title="QR" onclick="showToast('QR این کانفیگ در نسخه بعدی قابل فعال‌سازی است')">▦</button>
-    </span>
-  </div>
-`).join("");
-
-$("configCounter").textContent = `${SUBSCRIPTION.configs.length} کانفیگ`;
-
-async function copyConfig(i){
-  const c = SUBSCRIPTION.configs[i];
-  const text = `${c.name} | ${c.type} | ${c.traffic}`;
+async function load(){
+ let data=window.SUB_DATA;
+ if(qs.get("api")){
   try{
-    await navigator.clipboard.writeText(text);
-    showToast("اطلاعات کانفیگ کپی شد ✓");
-  }catch{
-    showToast("کپی کردن در این مرورگر فعال نیست");
-  }
+   const r=await fetch(qs.get("api"),{cache:"no-store"});
+   if(!r.ok)throw new Error("API "+r.status);
+   data=await r.json();
+  }catch(e){console.warn("Subscription API failed:",e)}
+ }
+ if(qs.get("data")){
+  try{data=JSON.parse(atob(qs.get("data")))}catch(e){console.warn("Invalid data parameter")}
+ }
+ render(normalize(data));
 }
 
-$("copyBtn").addEventListener("click", async () => {
-  try{
-    await navigator.clipboard.writeText(SUBSCRIPTION.link);
-    showToast("لینک اشتراک کپی شد ✓");
-  }catch{
-    $("subLink").select();
-    document.execCommand("copy");
-    showToast("لینک اشتراک کپی شد ✓");
-  }
-});
-
-let toastTimer;
-function showToast(message){
-  $("toast").textContent = message;
-  $("toast").classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => $("toast").classList.remove("show"), 2200);
+function render(d){
+ document.title=d.serviceName||"Subscription";
+ $("#service").textContent=d.serviceName;
+ $("#topUser").textContent=d.userName;
+ $("#hello").textContent=`سلام، ${d.userName} 👋`;
+ $("#welcome").textContent=d.welcome;
+ $("#state").textContent=d.status;
+ const total=Math.max(n(d.totalGB),0),used=Math.max(n(d.usedGB),0),remain=Math.max(total-used,0);
+ const pct=total?Math.min(100,used/total*100):0;
+ $("#total").textContent=fmt(total);$("#used").textContent=fmt(used);$("#remain").textContent=fmt(remain);
+ $("#count").textContent=d.configs.length;
+ $("#activeCount").textContent=d.configs.filter(x=>x.active).length;
+ $("#used2").textContent=fmt(used)+" GB";$("#total2").textContent=fmt(total)+" GB";
+ $("#bar").style.width=pct+"%";$("#percent").textContent=fmt(pct)+"%";
+ $("#remain2").textContent=fmt(remain)+" GB باقی مانده";
+ $("#expire").textContent=formatDate(d.expireAt);
+ $("#duration").textContent=d.duration;
+ $("#days").textContent=remainingText(d.expireAt);
+ $("#link").value=d.subscriptionLink;
+ $("#pill").textContent=d.configs.length+" کانفیگ";
+ $("#list").innerHTML=d.configs.map((c,i)=>`
+ <div class="row">
+  <span class="name">${esc(c.name)}</span><span class="type">${esc(c.type)}</span>
+  <span class="traffic">${fmt(c.usedGB)}${c.totalGB?` / ${fmt(c.totalGB)} GB`:" GB"}</span>
+  <span class="badge ${c.active?"":"off"}">${c.active?"● فعال":"● غیرفعال"}</span>
+  <span class="actions"><button class="mini" onclick="copyConfig(${i})">⧉</button><button class="mini" onclick="toast('QR برای این کانفیگ')">▦</button></span>
+ </div>`).join("");
+ window.__configs=d.configs;
 }
 
-function escapeHTML(value){
-  return String(value).replace(/[&<>"']/g, ch => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[ch]));
+function formatDate(v){
+ if(!v)return"—";const d=new Date(v);if(Number.isNaN(d.getTime()))return String(v);
+ return new Intl.DateTimeFormat("fa-IR",{year:"numeric",month:"2-digit",day:"2-digit"}).format(d);
 }
+function remainingText(v){
+ if(!v)return"—";const t=new Date(v).getTime();if(!Number.isFinite(t))return"—";
+ const ms=t-Date.now();if(ms<=0)return"منقضی شده";
+ const days=Math.floor(ms/86400000),hours=Math.floor(ms%86400000/3600000);
+ return days?`${days} روز`:`${hours} ساعت`;
+}
+function toast(s){const x=$("#toast");x.textContent=s;x.classList.add("show");clearTimeout(window.__t);window.__t=setTimeout(()=>x.classList.remove("show"),1800)}
+async function copyText(s){try{await navigator.clipboard.writeText(s);toast("کپی شد ✓")}catch{toast("کپی در این مرورگر فعال نیست")}}
+window.copyConfig=i=>{const c=window.__configs?.[i];if(c)copyText(`${c.name} | ${c.type}`)}
+$("#copy").onclick=()=>copyText($("#link").value);
+$("#theme").onclick=()=>{document.body.classList.toggle("dark");localStorage.setItem("sub-theme",document.body.classList.contains("dark")?"dark":"light")};
+if(localStorage.getItem("sub-theme")==="dark")document.body.classList.add("dark");
+load();
+setInterval(()=>{const el=$("#days");if(window.__lastExpire)el.textContent=remainingText(window.__lastExpire)},60000);
 </script>
-</body>
-</html>
+</body></html>
